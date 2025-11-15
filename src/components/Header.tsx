@@ -47,7 +47,6 @@ const ecosystemLinks = {
 };
 
 const recursosLinks = [
-  // ESTA É A CORREÇÃO
   { name: 'Avisos Legais', href: '/avisos-legais', icon: FileText },
   { name: 'Acessibilidade', href: '/acessibilidade', icon: Shield },
   { name: 'Trabalhe conosco', href: '/carreiras', icon: Briefcase },
@@ -241,7 +240,7 @@ const Header = () => {
               transition-all duration-300
             ">
               <Rocket className="w-5 h-5" />
-              Começar Agora
+              Entrar
             </Link>
           </div>
 
@@ -257,116 +256,120 @@ const Header = () => {
         </div>
       </header>
 
-      {/* 5. Overlay e Painel do Menu Mobile */}
+      {/* 5. Overlay e Painel do Menu Mobile 
+        *** A CORREÇÃO ESTÁ AQUI ***
+        Removi o <Fragment> (ou <>) extra que estava a envolver os
+        dois componentes <Transition.Child>.
+      */}
       <Transition show={isMobileMenuOpen} as={Fragment}>
-        <>
-          {/* Overlay (fundo escuro) */}
-          <Transition.Child
-            as="div"
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-            onClick={closeAllMenus}
-            enter="transition-opacity ease-linear duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity ease-linear duration-300"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          />
+        {/* O <Fragment> que estava aqui foi REMOVIDO. */}
+        
+        {/* Overlay (fundo escuro) */}
+        <Transition.Child
+          as="div"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={closeAllMenus}
+          enter="transition-opacity ease-linear duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity ease-linear duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        />
 
-          {/* Painel do Menu */}
-          <Transition.Child
-            as="div"
-            className="fixed top-0 right-0 w-4/5 max-w-sm h-full bg-white dark:bg-gray-900 z-50 shadow-lg p-6 md:hidden overflow-y-auto"
-            enter="transition ease-in-out duration-300 transform"
-            enterFrom="translate-x-full"
-            enterTo="translate-x-0"
-            leave="transition ease-in-out duration-300 transform"
-            leaveFrom="translate-x-0"
-            leaveTo="translate-x-full"
-          >
-            <div className="flex justify-between items-center mb-6">
-              <span className="text-xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-                Menu
-              </span>
-              <button onClick={closeAllMenus} className="text-gray-700 dark:text-gray-300">
-                <X className="w-7 h-7" />
-              </button>
-            </div>
+        {/* Painel do Menu */}
+        <Transition.Child
+          as="div"
+          className="fixed top-0 right-0 w-4/5 max-w-sm h-full bg-white dark:bg-gray-900 z-50 shadow-lg p-6 md:hidden overflow-y-auto"
+          enter="transition ease-in-out duration-300 transform"
+          enterFrom="translate-x-full"
+          enterTo="translate-x-0"
+          leave="transition ease-in-out duration-300 transform"
+          leaveFrom="translate-x-0"
+          leaveTo="translate-x-full"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+              Menu
+            </span>
+            <button onClick={closeAllMenus} className="text-gray-700 dark:text-gray-300">
+              <X className="w-7 h-7" />
+            </button>
+          </div>
+          
+          {/* Links do Menu Mobile (com Accordion) */}
+          <nav className="flex flex-col gap-2">
+            <Link href="/" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>INÍCIO</Link>
+            <Link href="/precos" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>PREÇOS</Link>
             
-            {/* Links do Menu Mobile (com Accordion) */}
-            <nav className="flex flex-col gap-2">
-              <Link href="/" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>INÍCIO</Link>
-              <Link href="/precos" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>PREÇOS</Link>
-              
-              {/* Accordion Ecossistema */}
-              <div>
-                <button onClick={() => handleMobileAccordion('eco')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                  ECOSSISTEMA <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'eco' ? 'rotate-180' : ''}`} />
-                </button>
-                {mobileAccordion === 'eco' && (
-                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                    {Object.values(ecosystemLinks).flat().map(item => (
-                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                        <item.icon className="w-5 h-5 text-brand-primary" />
-                        <span className="text-sm font-medium">{item.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {/* Accordion Ecossistema */}
+            <div>
+              <button onClick={() => handleMobileAccordion('eco')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                ECOSSISTEMA <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'eco' ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileAccordion === 'eco' && (
+                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                  {Object.values(ecosystemLinks).flat().map(item => (
+                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                      <item.icon className="w-5 h-5 text-brand-primary" />
+                      <span className="text-sm font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              {/* Accordion Recursos */}
-              <div>
-                <button onClick={() => handleMobileAccordion('rec')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                  RECURSOS <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'rec' ? 'rotate-180' : ''}`} />
-                </button>
-                {mobileAccordion === 'rec' && (
-                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                    {recursosLinks.map(item => (
-                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                        <item.icon className="w-5 h-5 text-brand-primary" />
-                        <span className="text-sm font-medium">{item.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {/* Accordion Recursos */}
+            <div>
+              <button onClick={() => handleMobileAccordion('rec')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                RECURSOS <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'rec' ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileAccordion === 'rec' && (
+                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                  {recursosLinks.map(item => (
+                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                      <item.icon className="w-5 h-5 text-brand-primary" />
+                      <span className="text-sm font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              {/* Accordion Suporte */}
-              <div>
-                <button onClick={() => handleMobileAccordion('sup')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                  SUPORTE <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'sup' ? 'rotate-180' : ''}`} />
-                </button>
-                {mobileAccordion === 'sup' && (
-                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                    {suporteLinks.map(item => (
-                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                        <item.icon className="w-5 h-5 text-brand-secondary" />
-                        <span className="text-sm font-medium">{item.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {/* Accordion Suporte */}
+            <div>
+              <button onClick={() => handleMobileAccordion('sup')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                SUPORTE <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'sup' ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileAccordion === 'sup' && (
+                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                  {suporteLinks.map(item => (
+                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                      <item.icon className="w-5 h-5 text-brand-secondary" />
+                      <span className="text-sm font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              <hr className="my-4 border-gray-200 dark:border-gray-700" />
-              
-              <Link href="/account" className="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                <UserCircle className="w-6 h-6" />
-                Facillit Account
-              </Link>
-              <Link href="/signup" className="
-                flex items-center justify-center gap-2
-                bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
-                font-semibold py-3 px-6 rounded-btn text-center
-                hover:opacity-90 transition-opacity mt-2
-              " onClick={closeAllMenus}>
-                <Rocket className="w-5 h-5" />
-                Começar Agora
-              </Link>
-            </nav>
-          </Transition.Child>
-        </>
+            <hr className="my-4 border-gray-200 dark:border-gray-700" />
+            
+            <Link href="/account" className="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+              <UserCircle className="w-6 h-6" />
+              Facillit Account
+            </Link>
+            <Link href="/signup" className="
+              flex items-center justify-center gap-2
+              bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
+              font-semibold py-3 px-6 rounded-btn text-center
+              hover:opacity-90 transition-opacity mt-2
+            " onClick={closeAllMenus}>
+              <Rocket className="w-5 h-5" />
+              Entrar
+            </Link>
+          </nav>
+        </Transition.Child>
       </Transition>
     </>
   );
