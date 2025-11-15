@@ -116,7 +116,7 @@ export default function AvisosLegaisPage() {
     <div className="container mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
       {/* (Este título não será impresso por causa das regras de CSS) */}
       <h1 className="font-title text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900 no-print">
-        Avisos Legais e Documentação
+        Avisos Legais
       </h1>
       
       <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
