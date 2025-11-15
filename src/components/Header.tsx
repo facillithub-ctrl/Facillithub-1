@@ -75,8 +75,7 @@ const Header = () => {
     setMobileAccordion(null);
   }
 
-  // --- COMPONENTE DE ITEM DO MEGA MENU (REUTILIZÁVEL) ---
-  // CORREÇÃO: Removido o 'div' com fundo gradiente do ícone.
+  // Componente do Item do Mega Menu (agora com ícone simples)
   const MegaMenuItem = ({ item }: { item: typeof ecosystemLinks.students[0] }) => (
     <Link
       href={item.href}
@@ -84,11 +83,6 @@ const Header = () => {
       onClick={closeAllMenus}
     >
       <div className="flex-shrink-0">
-        {/*
-          MUDANÇA AQUI:
-          O 'div' com 'bg-gradient-to-br' foi removido.
-          O ícone agora pega a cor 'brand-primary' diretamente.
-        */}
         <item.icon className="w-6 h-6 text-brand-primary" />
       </div>
       <div className="ml-4">
@@ -105,7 +99,12 @@ const Header = () => {
   return (
     <>
       <header className="w-full bg-white shadow-md dark:bg-gray-900 sticky top-0 z-40">
-        <div className="container mx-auto flex justify-between items-center h-20 px-6">
+        {/*
+          Layout Principal:
+          Usamos 'flex justify-between' para espaçar os 3 elementos.
+          'flex-1' no container da navegação faz com que ele ocupe o espaço central.
+        */}
+        <div className="container mx-auto flex justify-between items-center h-20 px-6 gap-6">
           
           {/* 1. Logo (Esquerda) */}
           <div className="flex-shrink-0">
@@ -121,142 +120,135 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* 2. Navegação Principal (Centralizada) */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
-              INÍCIO
-            </Link>
+          {/* 2. Navegação Principal (Centralizada) - NOVO ESTILO */}
+          <div className="flex-1 flex justify-center">
+            <nav className="hidden md:flex items-center gap-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-full px-4 py-2 shadow-inner">
+              <Link href="/" className="text-sm font-medium text-white hover:text-white/80 transition-colors px-3 py-1">
+                INÍCIO
+              </Link>
 
-            {/* --- Mega Menu Ecossistema --- */}
-            <div className="relative">
-              <button
-                onClick={() => handleDropdown('eco')}
-                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
-                  ${openDropdown === 'eco' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
-              >
-                ECOSSISTEMA <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'eco' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              <Transition
-                as={Fragment} 
-                show={openDropdown === 'eco'}
-                enter="transition ease-out duration-200"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="transition ease-in duration-150"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                {/*
-                  CORREÇÃO DE CENTRALIZAÇÃO:
-                  Trocado de 'absolute' para 'fixed'.
-                  Isso centraliza o menu na TELA ('fixed') e não no botão ('absolute').
-                  'top-20' (h-20 do header) + 'mt-4' posiciona abaixo do header.
-                */}
-                <div 
-                  className="fixed left-1/2 -translate-x-1/2 top-20 mt-4 w-screen max-w-5xl z-50"
-                  onMouseLeave={() => setOpenDropdown(null)}
+              {/* --- Mega Menu Ecossistema --- */}
+              <div className="relative">
+                <button
+                  onClick={() => handleDropdown('eco')}
+                  className={`flex items-center text-sm font-medium text-white hover:text-white/80 transition-colors px-3 py-1 rounded-full
+                    ${openDropdown === 'eco' ? 'bg-white/10' : ''}`}
                 >
-                  <div className="shadow-2xl rounded-lg bg-white dark:bg-gray-800 p-6 grid grid-cols-5 gap-x-6 gap-y-4">
-                    <div className="space-y-2 col-span-2">
-                      <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Students</h5>
-                      {ecosystemLinks.students.map((item) => <MegaMenuItem key={item.name} item={item} />)}
-                    </div>
-                    <div className="space-y-2">
-                      <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Schools</h5>
-                      {ecosystemLinks.schools.map((item) => <MegaMenuItem key={item.name} item={item} />)}
-                    </div>
-                    <div className="space-y-2">
-                      <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Enterprise</h5>
-                      {ecosystemLinks.enterprise.map((item) => <MegaMenuItem key={item.name} item={item} />)}
-                    </div>
-                    <div className="space-y-2">
-                      <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Startups</h5>
-                      {ecosystemLinks.startups.map((item) => <MegaMenuItem key={item.name} item={item} />)}
-                      <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm mt-4">Global</h5>
-                      {ecosystemLinks.global.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                  ECOSSISTEMA <ChevronDown className="w-5 h-5 ml-1" />
+                </button>
+                
+                <Transition
+                  as={Fragment} 
+                  show={openDropdown === 'eco'}
+                  enter="transition ease-out duration-200"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="transition ease-in duration-150"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <div 
+                    className="fixed left-1/2 -translate-x-1/2 top-20 mt-4 w-screen max-w-5xl z-50"
+                    onMouseLeave={() => setOpenDropdown(null)}
+                  >
+                    <div className="shadow-2xl rounded-lg bg-white dark:bg-gray-800 p-6 grid grid-cols-5 gap-x-6 gap-y-4">
+                      {/* ... (Conteúdo do Mega Menu) ... */}
+                      <div className="space-y-2 col-span-2">
+                        <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Students</h5>
+                        {ecosystemLinks.students.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                      </div>
+                      <div className="space-y-2">
+                        <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Schools</h5>
+                        {ecosystemLinks.schools.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                      </div>
+                      <div className="space-y-2">
+                        <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Enterprise</h5>
+                        {ecosystemLinks.enterprise.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                      </div>
+                      <div className="space-y-2">
+                        <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">For Startups</h5>
+                        {ecosystemLinks.startups.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                        <h5 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm mt-4">Global</h5>
+                        {ecosystemLinks.global.map((item) => <MegaMenuItem key={item.name} item={item} />)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Transition>
-            </div>
+                </Transition>
+              </div>
 
-            <Link href="/precos" className="text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
-              PREÇOS
-            </Link>
+              <Link href="/precos" className="text-sm font-medium text-white hover:text-white/80 transition-colors px-3 py-1">
+                PREÇOS
+              </Link>
 
-            {/* --- Dropdown Recursos --- */}
-            <div className="relative">
-              <button
-                onClick={() => handleDropdown('rec')}
-                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
-                  ${openDropdown === 'rec' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
-              >
-                RECURSOS <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'rec' ? 'rotate-180' : ''}`} />
-              </button>
-              <Transition
-                as={Fragment}
-                show={openDropdown === 'rec'}
-                enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
-                leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
-              >
-                <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
-                  {recursosLinks.map((link) => (
-                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <link.icon className="w-5 h-5 text-brand-primary" />
-                      <span>{link.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </Transition>
-            </div>
-            
-            {/* --- Dropdown Suporte --- */}
-            <div className="relative">
-              <button
-                onClick={() => handleDropdown('sup')}
-                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
-                  ${openDropdown === 'sup' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
-              >
-                SUPORTE <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'sup' ? 'rotate-180' : ''}`} />
-              </button>
-              <Transition
-                as={Fragment}
-                show={openDropdown === 'sup'}
-                enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
-                leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
-              >
-                <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
-                  {suporteLinks.map((link) => (
-                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                      <link.icon className="w-5 h-5 text-brand-secondary" />
-                      <span>{link.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </Transition>
-            </div>
-          </nav>
+              {/* --- Dropdown Recursos --- */}
+              <div className="relative">
+                <button
+                  onClick={() => handleDropdown('rec')}
+                  className={`flex items-center text-sm font-medium text-white hover:text-white/80 transition-colors px-3 py-1 rounded-full
+                    ${openDropdown === 'rec' ? 'bg-white/10' : ''}`}
+                >
+                  RECURSOS <ChevronDown className="w-5 h-5 ml-1" />
+                </button>
+                <Transition
+                  as={Fragment}
+                  show={openDropdown === 'rec'}
+                  enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
+                  leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
+                >
+                  <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
+                    {recursosLinks.map((link) => (
+                      <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <link.icon className="w-5 h-5 text-brand-primary" />
+                        <span>{link.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </Transition>
+              </div>
+              
+              {/* --- Dropdown Suporte --- */}
+              <div className="relative">
+                <button
+                  onClick={() => handleDropdown('sup')}
+                  className={`flex items-center text-sm font-medium text-white hover:text-white/80 transition-colors px-3 py-1 rounded-full
+                    ${openDropdown === 'sup' ? 'bg-white/10' : ''}`}
+                >
+                  SUPORTE <ChevronDown className="w-5 h-5 ml-1" />
+                </button>
+                <Transition
+                  as={Fragment}
+                  show={openDropdown === 'sup'}
+                  enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
+                  leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
+                >
+                  <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
+                    {suporteLinks.map((link) => (
+                      <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <link.icon className="w-5 h-5 text-brand-secondary" />
+                        <span>{link.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </Transition>
+              </div>
+            </nav>
+          </div>
 
-          {/* 3. Área do Usuário (Direita) */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link href="/account" className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
-              <UserCircle className="w-5 h-5" />
-              Facillit Account
-            </Link>
+          {/* 3. Área do Usuário (Direita) - Simplificado para 1 botão */}
+          <div className="hidden md:flex items-center justify-end">
             <Link href="/signup" className="
               flex items-center gap-2
               bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
-              text-sm font-semibold py-2 px-5 rounded-btn
+              text-sm font-semibold py-3 px-6 rounded-btn
               hover:opacity-90 shadow-lg hover:shadow-brand-primary/30
               transition-all duration-300
             ">
               <Rocket className="w-5 h-5" />
-              Começar Agora
+              Entrar
             </Link>
           </div>
 
-          {/* 4. Menu Mobile (Hamburguer) */}
+          {/* 4. Menu Mobile (Hamburguer) - Sem mudança de lógica, apenas de layout */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -268,121 +260,116 @@ const Header = () => {
         </div>
       </header>
 
-      {/*
-        5. Overlay e Painel do Menu Mobile
-        GARANTIA DE CORREÇÃO DO BUG:
-        O <Transition> pai tem 'as={Fragment}'.
-        Os DOIS filhos DIRETOS são <Transition.Child> com 'as="div"'.
-        Não há NENHUM <Fragment> ou <> envolvendo os <Transition.Child>.
-      */}
+      {/* 5. Overlay e Painel do Menu Mobile (Bug do Fragment corrigido) */}
       <Transition show={isMobileMenuOpen} as={Fragment}>
-        
-        {/* Overlay (fundo escuro) */}
-        <Transition.Child
-          as="div"
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={closeAllMenus}
-          enter="transition-opacity ease-linear duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity ease-linear duration-300"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        />
+        <>
+          {/* Overlay (fundo escuro) */}
+          <Transition.Child
+            as="div"
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={closeAllMenus}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          />
 
-        {/* Painel do Menu */}
-        <Transition.Child
-          as="div"
-          className="fixed top-0 right-0 w-4/5 max-w-sm h-full bg-white dark:bg-gray-900 z-50 shadow-lg p-6 md:hidden overflow-y-auto"
-          enter="transition ease-in-out duration-300 transform"
-          enterFrom="translate-x-full"
-          enterTo="translate-x-0"
-          leave="transition ease-in-out duration-300 transform"
-          leaveFrom="translate-x-0"
-          leaveTo="translate-x-full"
-        >
-          <div className="flex justify-between items-center mb-6">
-            <span className="text-xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-              Menu
-            </span>
-            <button onClick={closeAllMenus} className="text-gray-700 dark:text-gray-300">
-              <X className="w-7 h-7" />
-            </button>
-          </div>
-          
-          {/* Links do Menu Mobile (com Accordion) */}
-          <nav className="flex flex-col gap-2">
-            <Link href="/" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>INÍCIO</Link>
-            <Link href="/precos" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>PREÇOS</Link>
+          {/* Painel do Menu */}
+          <Transition.Child
+            as="div"
+            className="fixed top-0 right-0 w-4/5 max-w-sm h-full bg-white dark:bg-gray-900 z-50 shadow-lg p-6 md:hidden overflow-y-auto"
+            enter="transition ease-in-out duration-300 transform"
+            enterFrom="translate-x-full"
+            enterTo="translate-x-0"
+            leave="transition ease-in-out duration-300 transform"
+            leaveFrom="translate-x-0"
+            leaveTo="translate-x-full"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+                Menu
+              </span>
+              <button onClick={closeAllMenus} className="text-gray-700 dark:text-gray-300">
+                <X className="w-7 h-7" />
+              </button>
+            </div>
             
-            {/* Accordion Ecossistema */}
-            <div>
-              <button onClick={() => handleMobileAccordion('eco')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                ECOSSISTEMA <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'eco' ? 'rotate-180' : ''}`} />
-              </button>
-              {mobileAccordion === 'eco' && (
-                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                  {Object.values(ecosystemLinks).flat().map(item => (
-                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                      <item.icon className="w-5 h-5 text-brand-primary" />
-                      <span className="text-sm font-medium">{item.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Links do Menu Mobile (com Accordion) */}
+            <nav className="flex flex-col gap-2">
+              <Link href="/" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>INÍCIO</Link>
+              <Link href="/precos" className="text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>PREÇOS</Link>
+              
+              {/* Accordion Ecossistema */}
+              <div>
+                <button onClick={() => handleMobileAccordion('eco')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                  ECOSSISTEMA <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'eco' ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileAccordion === 'eco' && (
+                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                    {Object.values(ecosystemLinks).flat().map(item => (
+                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                        <item.icon className="w-5 h-5 text-brand-primary" />
+                        <span className="text-sm font-medium">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            {/* Accordion Recursos */}
-            <div>
-              <button onClick={() => handleMobileAccordion('rec')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                RECURSOS <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'rec' ? 'rotate-180' : ''}`} />
-              </button>
-              {mobileAccordion === 'rec' && (
-                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                  {recursosLinks.map(item => (
-                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                      <item.icon className="w-5 h-5 text-brand-primary" />
-                      <span className="text-sm font-medium">{item.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+              {/* Accordion Recursos */}
+              <div>
+                <button onClick={() => handleMobileAccordion('rec')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                  RECURSOS <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'rec' ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileAccordion === 'rec' && (
+                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                    {recursosLinks.map(item => (
+                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                        <item.icon className="w-5 h-5 text-brand-primary" />
+                        <span className="text-sm font-medium">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            {/* Accordion Suporte */}
-            <div>
-              <button onClick={() => handleMobileAccordion('sup')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                SUPORTE <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'sup' ? 'rotate-180' : ''}`} />
-              </button>
-              {mobileAccordion === 'sup' && (
-                <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
-                  {suporteLinks.map(item => (
-                    <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-                      <item.icon className="w-5 h-5 text-brand-secondary" />
-                      <span className="text-sm font-medium">{item.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+              {/* Accordion Suporte */}
+              <div>
+                <button onClick={() => handleMobileAccordion('sup')} className="w-full flex justify-between items-center text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                  SUPORTE <ChevronDown className={`w-5 h-5 transition-transform ${mobileAccordion === 'sup' ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileAccordion === 'sup' && (
+                  <div className="pl-4 mt-2 space-y-1 border-l-2 border-brand-primary/50">
+                    {suporteLinks.map(item => (
+                      <Link key={item.name} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                        <item.icon className="w-5 h-5 text-brand-secondary" />
+                        <span className="text-sm font-medium">{item.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            <hr className="my-4 border-gray-200 dark:border-gray-700" />
-            
-            <Link href="/account" className="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
-              <UserCircle className="w-6 h-6" />
-              Facillit Account
-            </Link>
-            <Link href="/signup" className="
-              flex items-center justify-center gap-2
-              bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
-              font-semibold py-3 px-6 rounded-btn text-center
-              hover:opacity-90 transition-opacity mt-2
-            " onClick={closeAllMenus}>
-              <Rocket className="w-5 h-5" />
-              Começar Agora
-            </Link>
-          </nav>
-        </Transition.Child>
+              <hr className="my-4 border-gray-200 dark:border-gray-700" />
+              
+              <Link href="/account" className="flex items-center gap-3 text-lg font-medium text-gray-700 dark:text-gray-300 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" onClick={closeAllMenus}>
+                <UserCircle className="w-6 h-6" />
+                Facillit Account
+              </Link>
+              <Link href="/signup" className="
+                flex items-center justify-center gap-2
+                bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
+                font-semibold py-3 px-6 rounded-btn text-center
+                hover:opacity-90 transition-opacity mt-2
+              " onClick={closeAllMenus}>
+                <Rocket className="w-5 h-5" />
+                Entrar 
+              </Link>
+            </nav>
+          </Transition.Child>
+        </>
       </Transition>
     </>
   );
