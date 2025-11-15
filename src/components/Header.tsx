@@ -1,10 +1,10 @@
 // src/components/Header.tsx
 "use client";
 
-import React, { useState, Fragment } from 'react'; // Adicione Fragment
-import { Transition } from '@headlessui/react'; // Adicione esta linha
+import React, { useState, Fragment } from 'react';
 import Link from 'next/link';
-// Documentação: Importando ícones da 'lucide-react'
+import Image from 'next/image'; // Importado para a Logo
+import { Transition } from '@headlessui/react';
 import {
   Menu, X, ChevronDown, Rocket, UserCircle,
   PenTool, ClipboardCheck, PlayCircle, Gamepad2, Library, Wand2, // Students
@@ -17,10 +17,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-// --- ESTRUTURAS DE DADOS (COM ÍCONES E DESCRIÇÕES) ---
-
-// Documentação: Dados do Mega Menu
-// Agora cada item tem um ícone e uma descrição (puxada dos seus PDFs)
+// --- (As estruturas de dados permanecem as mesmas) ---
 const ecosystemLinks = {
   students: [
     { name: 'Facillit Write', desc: 'Produção textual e escrita com IA.', icon: PenTool, href: '/write' },
@@ -48,41 +45,30 @@ const ecosystemLinks = {
     { name: 'Facillit Finances', desc: 'Finanças pessoais integradas.', icon: Landmark, href: '/finances' },
   ],
 };
-
 const recursosLinks = [
   { name: 'Avisos Legais', href: '/legal', icon: FileText },
   { name: 'Acessibilidade', href: '/acessibilidade', icon: Shield },
   { name: 'Trabalhe conosco', href: '/carreiras', icon: Briefcase },
   { name: 'Blog', href: '/blog', icon: Rss },
 ];
-
 const suporteLinks = [
   { name: 'Fale conosco', href: '/suporte/contato', icon: MessageSquare },
   { name: 'FAQ', href: '/suporte/faq', icon: HelpCircle },
   { name: 'Equipe de vendas', href: '/suporte/vendas', icon: Phone },
 ];
 
-
 // --- COMPONENTE DO HEADER ---
-
 const Header = () => {
-  // Estado para o menu mobile
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Estado para os dropdowns (controla qual está aberto)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  // Estado para o accordion mobile (controla qual seção está aberta)
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
 
-  // Documentação: Funções de controle de menu
-  // Controlam a abertura e fechamento, garantindo que apenas um abra por vez
   const handleDropdown = (menu: string) => {
     setOpenDropdown(openDropdown === menu ? null : menu);
   };
-
   const handleMobileAccordion = (menu: string) => {
     setMobileAccordion(mobileAccordion === menu ? null : menu);
   };
-  
   const closeAllMenus = () => {
     setOpenDropdown(null);
     setIsMobileMenuOpen(false);
@@ -90,14 +76,20 @@ const Header = () => {
   }
 
   // --- COMPONENTE DE ITEM DO MEGA MENU (REUTILIZÁVEL) ---
+  // CORREÇÃO: Removido o 'div' com fundo gradiente do ícone.
   const MegaMenuItem = ({ item }: { item: typeof ecosystemLinks.students[0] }) => (
     <Link
       href={item.href}
       className="group -m-3 p-3 flex items-start rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150"
       onClick={closeAllMenus}
     >
-      <div className="flex-shrink-0 p-2 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg">
-        <item.icon className="w-6 h-6 text-white" />
+      <div className="flex-shrink-0">
+        {/*
+          MUDANÇA AQUI:
+          O 'div' com 'bg-gradient-to-br' foi removido.
+          O ícone agora pega a cor 'brand-primary' diretamente.
+        */}
+        <item.icon className="w-6 h-6 text-brand-primary" />
       </div>
       <div className="ml-4">
         <p className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-brand-primary transition-colors">
@@ -117,19 +109,21 @@ const Header = () => {
           
           {/* 1. Logo (Esquerda) */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold" onClick={closeAllMenus}>
-              <span className="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-                Facillit Hub
-              </span>
+            <Link href="/" onClick={closeAllMenus}>
+              <Image
+                src="/images/SVG/logotipo/logo preta.svg"
+                alt="Facillit Hub Logo"
+                width={140}
+                height={28}
+                priority
+                className="dark:invert"
+              />
             </Link>
           </div>
 
           {/* 2. Navegação Principal (Centralizada) */}
-          {/* Documentação: Esta é a nova estrutura de layout
-              'absolute left-1/2 -translate-x-1/2' centraliza perfeitamente o menu
-          */}
-          <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <Link href="/" className="text-gray-700 font-medium hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
               INÍCIO
             </Link>
 
@@ -137,17 +131,14 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => handleDropdown('eco')}
-                className={`flex items-center font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
+                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
                   ${openDropdown === 'eco' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
               >
                 ECOSSISTEMA <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'eco' ? 'rotate-180' : ''}`} />
               </button>
               
-              {/* Documentação: Usando 'Fragment' e 'transition' para animar
-                  opacity-0 -> opacity-100
-                  scale-95 -> scale-100
-              */}
               <Transition
+                as={Fragment} 
                 show={openDropdown === 'eco'}
                 enter="transition ease-out duration-200"
                 enterFrom="opacity-0 scale-95"
@@ -156,9 +147,15 @@ const Header = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
+                {/*
+                  CORREÇÃO DE CENTRALIZAÇÃO:
+                  Trocado de 'absolute' para 'fixed'.
+                  Isso centraliza o menu na TELA ('fixed') e não no botão ('absolute').
+                  'top-20' (h-20 do header) + 'mt-4' posiciona abaixo do header.
+                */}
                 <div 
-                  className="absolute -left-72 top-full mt-4 w-screen max-w-5xl z-50"
-                  onMouseLeave={() => setOpenDropdown(null)} // Fecha ao tirar o mouse
+                  className="fixed left-1/2 -translate-x-1/2 top-20 mt-4 w-screen max-w-5xl z-50"
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <div className="shadow-2xl rounded-lg bg-white dark:bg-gray-800 p-6 grid grid-cols-5 gap-x-6 gap-y-4">
                     <div className="space-y-2 col-span-2">
@@ -184,7 +181,7 @@ const Header = () => {
               </Transition>
             </div>
 
-            <Link href="/precos" className="text-gray-700 font-medium hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
+            <Link href="/precos" className="text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
               PREÇOS
             </Link>
 
@@ -192,19 +189,20 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => handleDropdown('rec')}
-                className={`flex items-center font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
+                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
                   ${openDropdown === 'rec' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
               >
                 RECURSOS <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'rec' ? 'rotate-180' : ''}`} />
               </button>
               <Transition
+                as={Fragment}
                 show={openDropdown === 'rec'}
                 enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
                 leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
               >
                 <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
                   {recursosLinks.map((link) => (
-                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                       <link.icon className="w-5 h-5 text-brand-primary" />
                       <span>{link.name}</span>
                     </Link>
@@ -217,19 +215,20 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => handleDropdown('sup')}
-                className={`flex items-center font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
+                className={`flex items-center text-sm font-medium hover:text-brand-primary dark:hover:text-brand-secondary transition-colors
                   ${openDropdown === 'sup' ? 'text-brand-primary dark:text-brand-secondary' : 'text-gray-700 dark:text-gray-300'}`}
               >
                 SUPORTE <ChevronDown className={`w-5 h-5 ml-1 transition-transform ${openDropdown === 'sup' ? 'rotate-180' : ''}`} />
               </button>
               <Transition
+                as={Fragment}
                 show={openDropdown === 'sup'}
                 enter="transition ease-out duration-100" enterFrom="opacity-0" enterTo="opacity-100"
                 leave="transition ease-in duration-75" leaveFrom="opacity-100" leaveTo="opacity-0"
               >
                 <div className="absolute left-0 top-full mt-4 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 overflow-hidden">
                   {suporteLinks.map((link) => (
-                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <Link key={link.name} href={link.href} className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                       <link.icon className="w-5 h-5 text-brand-secondary" />
                       <span>{link.name}</span>
                     </Link>
@@ -241,14 +240,14 @@ const Header = () => {
 
           {/* 3. Área do Usuário (Direita) */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/account" className="flex items-center gap-2 text-gray-700 font-medium hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
+            <Link href="/account" className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-brand-primary dark:text-gray-300 dark:hover:text-brand-secondary transition-colors">
               <UserCircle className="w-5 h-5" />
               Facillit Account
             </Link>
             <Link href="/signup" className="
               flex items-center gap-2
               bg-gradient-to-r from-brand-primary to-brand-secondary text-white 
-              font-semibold py-2 px-5 rounded-btn
+              text-sm font-semibold py-2 px-5 rounded-btn
               hover:opacity-90 shadow-lg hover:shadow-brand-primary/30
               transition-all duration-300
             ">
@@ -269,22 +268,27 @@ const Header = () => {
         </div>
       </header>
 
-      {/* 5. Overlay e Painel do Menu Mobile */}
-      <Transition show={isMobileMenuOpen}>
+      {/*
+        5. Overlay e Painel do Menu Mobile
+        GARANTIA DE CORREÇÃO DO BUG:
+        O <Transition> pai tem 'as={Fragment}'.
+        Os DOIS filhos DIRETOS são <Transition.Child> com 'as="div"'.
+        Não há NENHUM <Fragment> ou <> envolvendo os <Transition.Child>.
+      */}
+      <Transition show={isMobileMenuOpen} as={Fragment}>
+        
         {/* Overlay (fundo escuro) */}
         <Transition.Child
+          as="div"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={closeAllMenus}
           enter="transition-opacity ease-linear duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
           leave="transition-opacity ease-linear duration-300"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-        >
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-            onClick={closeAllMenus}
-          ></div>
-        </Transition.Child>
+        />
 
         {/* Painel do Menu */}
         <Transition.Child
@@ -384,7 +388,4 @@ const Header = () => {
   );
 };
 
-// Documentação: Importando o 'Fragment' para as Transições
-// Tivemos que importar o 'Fragment' do React para que a biblioteca
-// de transição (Headless UI, que o Next.js usa) funcione corretamente.
 export default Header;
