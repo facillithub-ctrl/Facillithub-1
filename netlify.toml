@@ -1,0 +1,16 @@
+# netlify.toml
+
+[build]
+  # Documentação:
+  # Comando que o Netlify vai rodar para construir o site
+  command = "npm run build"
+  
+  # Documentação:
+  # Pasta que o Next.js gera após o 'build'. É o que o Netlify vai hospedar.
+  # (O Next.js v13+ (App Router) usa '.next' por padrão)
+  publish = ".next"
+
+[build.environment]
+  # Documentação:
+  # Define a versão do Node.js que o Netlify deve usar
+  NODE_VERSION = "20"
