@@ -8,7 +8,6 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    // Em v3, usamos 'extend' para adicionar nossas coisas sem apagar as do Tailwind
     extend: {
       colors: {
         brand: {
@@ -17,13 +16,17 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
+        // Renomeado de 'sans' para 'inter' para clareza
+        inter: ['var(--font-inter)', 'sans-serif'],
+        // 1. ADICIONADA A FONTE DE TÍTULO
+        title: ['var(--font-poppins)', 'sans-serif'],
       },
       borderRadius: {
         btn: '9999px', // Botões arredondados
       },
     },
   },
+  // 2. ADICIONADO O PLUGIN DE TIPOGRAFIA
   plugins: [
     require('@tailwindcss/typography'),
   ],
