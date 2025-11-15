@@ -11,22 +11,22 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: '#42047e', // Cor primária da marca
-          secondary: '#07f49e', // Cor secundária da marca
+          primary: '#42047e',
+          secondary: '#07f49e',
         },
       },
       fontFamily: {
         // Renomeado de 'sans' para 'inter' para clareza
         inter: ['var(--font-inter)', 'sans-serif'],
-        // 1. ADICIONADA A FONTE DE TÍTULO
+        // Adicionada a fonte de título
         title: ['var(--font-poppins)', 'sans-serif'],
       },
       borderRadius: {
-        btn: '9999px', // Botões arredondados
+        btn: '9999px',
       },
     },
   },
-  // 2. ADICIONADO O PLUGIN DE TIPOGRAFIA
+  // Adicionado o plugin de tipografia
   plugins: [
     require('@tailwindcss/typography'),
   ],

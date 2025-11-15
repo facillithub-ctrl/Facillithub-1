@@ -1,9 +1,35 @@
-/* app/globals.css */
+/* src/app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Removemos todas as outras regras.
-  O layout.tsx e o tailwind.config.ts
-  agora cuidam das fontes e cores de fundo globais.
+/* ADICIONE ESTE BLOCO NO FINAL
+  Documentação: Estilos de Impressão
 */
+@media print {
+  /* Esconde tudo por defeito */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Mostra apenas a área de impressão e o que está dentro dela */
+  .printable-area, .printable-area * {
+    visibility: visible;
+  }
+  
+  /* Posiciona a área de impressão no topo da página de impressão */
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    box-shadow: none;
+    border: none;
+  }
+  
+  /* Garante que o botão de imprimir não apareça na impressão */
+  .no-print {
+    display: none;
+  }
+}
