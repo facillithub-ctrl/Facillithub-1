@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
+    "@portabletext/react": "^5.0.0",
     "@supabase/supabase-js": "^2.81.1",
     "firebase": "^12.6.0",
     "lucide-react": "^0.553.0",
